@@ -83,7 +83,6 @@ void driveSystemArcadeDrive(void) {
 
 task driveTask(void *arg) {
   (void)arg; // "use" `arg` to avoid unused variable warning.
-
   vexTaskRegister("drive");
 
   while (!chThdShouldTerminate()) {
@@ -142,7 +141,6 @@ void armSystemIntake(void) {
 
 task armTask(void *arg) {
   (void)arg;
-
   vexTaskRegister("arm");
 
   armPID = PidControllerInit(1, 0.04, 0.0, armEnc, 0); // Kp, Ki, Kd
@@ -160,7 +158,6 @@ task armTask(void *arg) {
 
 task pneumaticsTask(void *arg) {
   (void)arg;
-
   vexTaskRegister("pneumatics");
 
   while (!chThdShouldTerminate()) {
@@ -180,8 +177,8 @@ task pneumaticsTask(void *arg) {
 
 task apolloTask(void *arg) {
   (void)arg;
-
   vexTaskRegister("apollo");
+
   apolloInit();
 
   while(1) { // Always update apollo output.
