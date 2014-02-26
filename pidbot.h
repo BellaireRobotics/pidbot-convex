@@ -7,7 +7,7 @@
 
 // #define autonomousSelect kVexAnalog_2
 
-#define liftEnc kImeChannel_1
+#define armEnc kImeChannel_1
 
 #define rightIntake kVexMotor_1
 #define leftIntake kVexMotor_10
@@ -28,11 +28,15 @@ extern "C" {
 
 void driveSystemArcadeDrive(void);
 task driveTask(void *arg);
-task liftTask(void *arg);
-task liftPIDTask(void *arg);
-void intakeSystemSet(short s);
-task intakeTask(void *arg);
+
+void armSystemLift(void);
+void armSystemIntakeSet(short s);
+void armSystemIntake(void);
+task armTask(void *arg);
+
 task pneumaticsTask(void *arg);
+
+// real time display of motor and sensor data
 task apolloTask(void *arg);
 
 #ifdef __cplusplus

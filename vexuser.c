@@ -34,14 +34,12 @@ static vexMotorCfg motorConfig[kVexMotorNum] = {
   { rightBack,       kVexMotor393S, kVexMotorReversed, kVexSensorNone, 0 },
   { rightTopLift,    kVexMotor393T, kVexMotorNormal,   kVexSensorNone, 0 },
   { rightBottomLift, kVexMotor393T, kVexMotorNormal,   kVexSensorNone, 0 },
-  { leftTopLift,     kVexMotor393T, kVexMotorNormal,   kVexSensorIME,  liftEnc },
+  { leftTopLift,     kVexMotor393T, kVexMotorNormal,   kVexSensorIME,  armEnc },
   { leftBottomLift,  kVexMotor393T, kVexMotorNormal,   kVexSensorNone, 0 },
   { leftFront,       kVexMotor393S, kVexMotorNormal,   kVexSensorNone, 0 },
   { leftBack,        kVexMotor393S, kVexMotorReversed, kVexSensorNone, 0 },
   { leftIntake,      kVexMotor393S, kVexMotorNormal,   kVexSensorNone, 0 }
 };
-
-pidController *liftPID;
 
 void vexUserSetup() {
   vexDigitalConfigure(digitalConfig, DIG_CONFIG_SIZE(digitalConfig));
@@ -70,9 +68,7 @@ task vexOperator(void *arg) {
   vexTaskRegister("operator");
 
   StartTask(driveTask);
-  //StartTask(liftTask);
-  //StartTask(liftPIDTask);
-  StartTask(intakeTask);
+  //StartTask(armTask);
   //StartTask(pneumaticsTask);
   StartTaskWithPriority(apolloTask, LOWPRIO);
 

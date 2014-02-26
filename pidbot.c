@@ -16,7 +16,16 @@
 #define SMAX 127
 #define SMIN (-127)
 
+#define LIFT_MINIMUM_HEIGHT 0
+#define LIFT_FLOOR_HEIGHT   0
+#define LIFT_BUMP_HEIGHT    150
+#define LIFT_STASH_HEIGHT   1100
+#define LIFT_HANG_HEIGHT    1280
+#define LIFT_MAX_HEIGHT     1280
+
 #define signum(x) ((x > 0) - (x < 0))
+
+pidController *armPID;
 
 // linearizing array, goes to 256 to save CPU cycles; xmax + ymax = 256
 const unsigned int TrueSpeed[256] = {
@@ -85,51 +94,66 @@ task driveTask(void *arg) {
   return (task)0;
 }
 
-task liftTask(void *arg) {
-  (void)arg;
+void armSystemLift(void) {
+  if (vexControllerGet(Btn8UXmtr2) || vexControllerGet(Btn8U)) // check stash waypoint
+    armPID->target_value = LIFT_STASH_HEIGHT;
+  else if (vexControllerGet(Btn8LXmtr2) || vexControllerGet(Btn8L)) // check bump waypoint
+    armPID->target_value = LIFT_BUMP_HEIGHT;
+  else if (vexControllerGet(Btn8DXmtr2) || vexControllerGet(Btn8D)) // check floor waypoint
+    armPID->target_value = LIFT_FLOOR_HEIGHT;
+  else if (vexControllerGet(Btn8RXmtr2) || vexControllerGet(Btn8R)) // check hang waypoint
+    armPID->target_value = LIFT_HANG_HEIGHT;
+  else if (vexControllerGet(Btn6UXmtr2) || vexControllerGet(Btn6U))
+    armPID->target_value += 5;
+  else if (vexControllerGet(Btn6DXmtr2) || vexControllerGet(Btn6D))
+    armPID->target_value -= 10;
 
-  vexTaskRegister("lift");
+  if (armPID->target_value < LIFT_MINIMUM_HEIGHT)
+    armPID->target_value = LIFT_MINIMUM_HEIGHT;
+  if (armPID->target_value > LIFT_MAX_HEIGHT )
+    armPID->target_value = LIFT_MAX_HEIGHT;
 
-  while (!chThdShouldTerminate()) {
-    vexSleep(25);
-  }
+  PidControllerUpdate(armPID);
 
-  return (task)0;
+  // Kill if power is lost
+  if (vexSpiGetMainBattery() < 3000)
+    armPID->drive_cmd = 0;
+
+  vexMotorSet(rightTopLift, armPID->drive_cmd);
+  vexMotorSet(rightBottomLift, armPID->drive_cmd);
+  vexMotorSet(leftTopLift, armPID->drive_cmd);
+  vexMotorSet(leftBottomLift, armPID->drive_cmd);
 }
 
-task liftPIDTask(void *arg) {
-  (void)arg;
-
-  vexTaskRegister("lift PID");
-
-  while (!chThdShouldTerminate()) {
-    vexSleep(25);
-  }
-
-  return (task)0;
-}
-
-void intakeSystemSet(short s) {
+void armSystemIntakeSet(short s) {
   vexMotorSet(leftIntake, s);
   vexMotorSet(rightIntake, s);
 }
 
-task intakeTask(void *arg) {
+void armSystemIntake(void) {
+  if (vexControllerGet(Btn5U)) {
+    armSystemIntakeSet(SMAX);
+  } else if (vexControllerGet(Btn5D)) {
+    armSystemIntakeSet(SMIN);
+  } else {
+    armSystemIntakeSet(0);
+  }
+}
+
+task armTask(void *arg) {
   (void)arg;
 
-  vexTaskRegister("intake");
+  vexTaskRegister("arm");
+
+  armPID = PidControllerInit(1, 0.04, 0.0, armEnc, 0); // Kp, Ki, Kd
+  vexSensorValueSet(armEnc, 0);
 
   while (!chThdShouldTerminate()) {
-    if (vexControllerGet(Btn5U)) {
-      intakeSystemSet(SMAX);
-    } else if (vexControllerGet(Btn5D)) {
-      intakeSystemSet(SMIN);
-    } else {
-      intakeSystemSet(0);
-    }
+    armSystemLift();
+    armSystemIntake();
 
     vexSleep(25);
-  } 
+  }
 
   return (task)0;
 }
