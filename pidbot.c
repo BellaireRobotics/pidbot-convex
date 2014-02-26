@@ -93,35 +93,56 @@ task driveTask(void *arg) {
   return (task)0;
 }
 
+void armSystemLiftSet(short s) {
+  vexMotorSet(leftTopLift, s);
+  vexMotorSet(leftBottomLift, s);
+  vexMotorSet(rightTopLift, s);
+  vexMotorSet(rightBottomLift, s);
+}
+
 void armSystemLift(void) {
-  if (vexControllerGet(Btn8UXmtr2) || vexControllerGet(Btn8U)) // check stash waypoint
+  if (vexControllerGet(Btn8UXmtr2) || vexControllerGet(Btn8U)) { // stash waypoint
     armPID->target_value = LIFT_STASH_HEIGHT;
-  else if (vexControllerGet(Btn8LXmtr2) || vexControllerGet(Btn8L)) // check bump waypoint
+  } else if (vexControllerGet(Btn8LXmtr2) || vexControllerGet(Btn8L)) { // bump waypoint
     armPID->target_value = LIFT_BUMP_HEIGHT;
-  else if (vexControllerGet(Btn8DXmtr2) || vexControllerGet(Btn8D)) // check floor waypoint
+  } else if (vexControllerGet(Btn8DXmtr2) || vexControllerGet(Btn8D)) { // floor waypoint
     armPID->target_value = LIFT_FLOOR_HEIGHT;
-  else if (vexControllerGet(Btn8RXmtr2) || vexControllerGet(Btn8R)) // check hang waypoint
+  } else if (vexControllerGet(Btn8RXmtr2) || vexControllerGet(Btn8R)) { // hang waypoint
     armPID->target_value = LIFT_HANG_HEIGHT;
-  else if (vexControllerGet(Btn6UXmtr2) || vexControllerGet(Btn6U))
-    armPID->target_value += 5;
-  else if (vexControllerGet(Btn6DXmtr2) || vexControllerGet(Btn6D))
-    armPID->target_value -= 10;
+  } else if (vexControllerGet(Btn6UXmtr2) || vexControllerGet(Btn6U)) {
+    //armPID->target_value += 5;
+    if (vexSensorValueGet(armEnc) < LIFT_MAX_HEIGHT) { // arm override up
+      armSystemLiftSet(127);
+      //vexSleep(2);
+      armPID->target_value = vexSensorValueGet(armEnc);
+    }
+  } else if (vexControllerGet(Btn6DXmtr2) || vexControllerGet(Btn6D)) {
+    //armPID->target_value -= 10;
+    if (vexSensorValueGet(armEnc) > LIFT_MINIMUM_HEIGHT) { // arm override down
+      armSystemLiftSet(-127);
+      //vexSleep(2);
+      armPID->target_value = vexSensorValueGet(armEnc);
+    }
+  } else {
+    armSystemLiftSet(0); // important... don't wanna accidently chew up gears, yeah...? lol
+  }
 
-  if (armPID->target_value < LIFT_MINIMUM_HEIGHT)
+  if (armPID->target_value < LIFT_MINIMUM_HEIGHT) {
     armPID->target_value = LIFT_MINIMUM_HEIGHT;
-  if (armPID->target_value > LIFT_MAX_HEIGHT )
-    armPID->target_value = LIFT_MAX_HEIGHT;
+  }
 
-  PidControllerUpdate(armPID);
+  if (armPID->target_value > LIFT_MAX_HEIGHT) {
+    armPID->target_value = LIFT_MAX_HEIGHT;
+  }
+
+  PidControllerUpdate(armPID); // aim...
 
   // Kill if power is lost
-  if (vexSpiGetMainBattery() < 3000)
+  if (vexSpiGetMainBattery() < 3000) {
     armPID->drive_cmd = 0;
+  }
 
-  vexMotorSet(rightTopLift, armPID->drive_cmd);
-  vexMotorSet(rightBottomLift, armPID->drive_cmd);
-  vexMotorSet(leftTopLift, armPID->drive_cmd);
-  vexMotorSet(leftBottomLift, armPID->drive_cmd);
+  armSystemLiftSet(armPID->drive_cmd); // ...and fire!
 }
 
 void armSystemIntakeSet(short s) {
@@ -181,7 +202,7 @@ task apolloTask(void *arg) {
 
   apolloInit();
 
-  while(1) { // Always update apollo output.
+  while (1) { // Always update apollo output.
     apolloUpdate();
     vexSleep(150); // Slow updates.
   }

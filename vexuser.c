@@ -68,8 +68,8 @@ task vexOperator(void *arg) {
   vexTaskRegister("operator");
 
   StartTask(driveTask);
-  //StartTask(armTask);
-  //StartTask(pneumaticsTask);
+  StartTask(armTask);
+  StartTask(pneumaticsTask);
   StartTaskWithPriority(apolloTask, LOWPRIO);
 
   while (!chThdShouldTerminate()) {
