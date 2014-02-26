@@ -164,6 +164,14 @@ task pneumaticsTask(void *arg) {
   vexTaskRegister("pneumatics");
 
   while (!chThdShouldTerminate()) {
+    if (vexControllerGet(Btn7U) || vexControllerGet(Btn7UXmtr2)) {
+      vexSensorValueSet(solenoid_1, 1);
+      vexSensorValueSet(solenoid_2, 1);
+    } else if (vexControllerGet(Btn7D) || vexControllerGet(Btn7DXmtr2)) {
+      vexSensorValueSet(solenoid_1, 0);
+      vexSensorValueSet(solenoid_2, 0);
+    }
+
     vexSleep(25);
   }
 
