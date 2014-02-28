@@ -108,7 +108,7 @@ CSRC = $(PORTSRC) \
        $(VEXFWSRC) \
        $(VEXOPTSRC) \
        $(VEXUSERSRC) \
-       main.c
+       #main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -236,3 +236,10 @@ ifeq ($(USE_FWLIB),yes)
 endif
 
 include $(CHIBIOS)/os/ports/GCC/ARMCMx/rules.mk
+
+upload:
+	cortexflash -X -w bin/output.hex -v -n 3 /dev/cu.usbmodem1411
+
+
+monitor:
+	minicom -D /dev/cu.usbmodem1411

@@ -1,14 +1,6 @@
-// vexuser.c
+// pidbot.c
 
-#include <stdlib.h>
-
-#include "ch.h"  // needs for all ChibiOS programs
-#include "hal.h" // hardware abstraction layer header
-#include "vex.h" // vex library header
-
-#include "pidbot.h" // bot header
-#include "robotc_glue.h" // for ROBOTC-like tasks
-#include "pidlib.h"
+#include "pidbot.h"
 
 // Digital I/O configuration
 static vexDigiCfg digitalConfig[kVexDigital_Num] = {
@@ -30,14 +22,14 @@ static vexDigiCfg digitalConfig[kVexDigital_Num] = {
 // Note: 4 amps per motor group (1-5, 6-10).
 static vexMotorCfg motorConfig[kVexMotorNum] = {
   { rightIntake,     kVexMotor393S, kVexMotorNormal,   kVexSensorNone, 0 },
-  { rightFront,      kVexMotor393S, kVexMotorNormal,   kVexSensorNone, 0 },
-  { rightBack,       kVexMotor393S, kVexMotorReversed, kVexSensorNone, 0 },
+  { rightFront,      kVexMotor393S, kVexMotorReversed, kVexSensorNone, 0 },
+  { rightBack,       kVexMotor393S, kVexMotorNormal,   kVexSensorNone, 0 },
   { rightTopLift,    kVexMotor393T, kVexMotorNormal,   kVexSensorNone, 0 },
   { rightBottomLift, kVexMotor393T, kVexMotorNormal,   kVexSensorNone, 0 },
-  { leftTopLift,     kVexMotor393T, kVexMotorNormal,   kVexSensorIME,  armEnc },
-  { leftBottomLift,  kVexMotor393T, kVexMotorNormal,   kVexSensorNone, 0 },
-  { leftFront,       kVexMotor393S, kVexMotorNormal,   kVexSensorNone, 0 },
-  { leftBack,        kVexMotor393S, kVexMotorReversed, kVexSensorNone, 0 },
+  { leftTopLift,     kVexMotor393T, kVexMotorReversed, kVexSensorIME,  armEnc },
+  { leftBottomLift,  kVexMotor393T, kVexMotorReversed, kVexSensorNone, 0 },
+  { leftFront,       kVexMotor393S, kVexMotorReversed, kVexSensorNone, 0 },
+  { leftBack,        kVexMotor393S, kVexMotorNormal,   kVexSensorNone, 0 },
   { leftIntake,      kVexMotor393S, kVexMotorNormal,   kVexSensorNone, 0 }
 };
 
@@ -50,10 +42,15 @@ void vexUserInit() {
   // ...
 }
 
-task vexAutonomous(void *arg) {
+task vexOperator(void *arg) {
   (void)arg;
+  vexTaskRegister("operator");
 
-  vexTaskRegister("auton");
+  //StartTask(safetyTask);
+  StartTask(driveTask);
+  //StartTask(armTask);
+  //StartTask(pneumaticsTask);
+  StartTaskWithPriority(apolloTask, LOWPRIO);
 
   while (!chThdShouldTerminate()) {
     vexSleep(25);
@@ -62,15 +59,13 @@ task vexAutonomous(void *arg) {
   return (task)0;
 }
 
-task vexOperator(void *arg) {
+task vexAutonomous(void *arg) {
   (void)arg;
+  vexTaskRegister("auton");
 
-  vexTaskRegister("operator");
-
-  StartTask(driveTask);
   StartTask(armTask);
-  StartTask(pneumaticsTask);
   StartTaskWithPriority(apolloTask, LOWPRIO);
+  autonomous();
 
   while (!chThdShouldTerminate()) {
     vexSleep(25);

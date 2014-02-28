@@ -16,3 +16,17 @@ Pneumatic lock for high hang, controlled by left button pad. Up = lock, Down = u
 
 Autonomous routine:
 Unfold intake, attempt to intake a large ball, and then high hang during autonomous. Of course, this autonomous is a hanging zone-only autonomous.
+
+
+ Joystick Mappings
+ -----------------
+ * 8U - Stash waypoint
+ * 8L - Bump waypoint
+ * 8R - Hang waypoint
+ * 6U - Arm override up
+ * 6D - Arm override down
+ * 5U - Intake out
+ * 5D - Intake in
+ * 7U - Pneumatics on
+ * 7D - Pneumatics off
+ 
