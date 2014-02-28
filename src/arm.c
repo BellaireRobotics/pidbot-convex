@@ -36,10 +36,10 @@ void armSystemLift(void) {
     //   //vexSleep(2);
     //   armPID->target_value = vexSensorValueGet(armEnc);
     // }
-  } else {
-    armPID->target_value = vexSensorValueGet(armEnc); // set target to current when no action
-    // armSystemLiftSet(0); // important... don't wanna accidently chew up gears, yeah...? lol
-  }
+  } // else {
+  //   armPID->target_value = vexSensorValueGet(armEnc); // set target to current when no action
+  //   // armSystemLiftSet(0); // important... don't wanna accidently chew up gears, yeah...? lol
+  // }
 
   // clip lower
   if (armPID->target_value < LIFT_MINIMUM_HEIGHT) {
