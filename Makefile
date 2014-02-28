@@ -108,7 +108,7 @@ CSRC = $(PORTSRC) \
        $(VEXFWSRC) \
        $(VEXOPTSRC) \
        $(VEXUSERSRC) \
-       #main.c
+       main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

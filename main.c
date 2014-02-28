@@ -11,7 +11,7 @@
 /*    Created:    7 May 2013                                                   */
 /*                                                                             */
 /*    Revisions:                                                               */
-/*                V1.00  XX XXX 2013 - Initial release                         */
+/*                V1.00  04 July 2013 - Initial release                        */
 /*                                                                             */
 /*-----------------------------------------------------------------------------*/
 /*                                                                             */
@@ -48,11 +48,39 @@
 #include "chprintf.h"
 #include "vex.h"
 
+#include "smartmotor.h"
+#include "apollo.h"
+
 /*-----------------------------------------------------------------------------*/
 /* Command line related.                                                       */
 /*-----------------------------------------------------------------------------*/
 
-#define SHELL_WA_SIZE   THD_WA_SIZE(512)
+static void
+cmd_apollo(vexStream *chp, int argc, char *argv[]) {
+  (void)argc;
+  (void)argv;
+
+  apolloInit();
+
+  // run until any key press
+  while (sdGetWouldBlock((SerialDriver *)chp)) {
+    apolloUpdate();
+  }
+
+  apolloDeinit();
+}
+
+
+static void
+cmd_sm(vexStream *chp, int argc, char *argv[]) {
+  (void)argv;
+  (void)chp;
+  (void)argc;
+
+  SmartMotorDebugStatus();
+}
+
+#define SHELL_WA_SIZE   THD_WA_SIZE(2048)
 
 // Shell command
 static const ShellCommand commands[] = {
@@ -64,6 +92,8 @@ static const ShellCommand commands[] = {
   {"son",     vexSonarDebug},
   {"ime",     vexIMEDebug},
   {"test",    vexTestDebug},
+  {"sm",      cmd_sm },
+  {"apollo",  cmd_apollo},
   {NULL, NULL}
 };
 
@@ -92,6 +122,8 @@ int main(void) {
   // Init the serial port associated with the console
   vexConsoleInit();
 
+  // use digital 10 as safety
+  //if( palReadPad( VEX_DIGIO_10_PORT, VEX_DIGIO_10_PIN) == 1)
   // init VEX
   vexCortexInit();
 
