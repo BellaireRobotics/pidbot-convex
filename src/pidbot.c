@@ -39,20 +39,20 @@ void vexUserSetup() {
 }
 
 void vexUserInit() {
-  // ...
+  //StartTask(safetyTask); // safety first? (LOWPRIO?) -_-
+  //StartTaskWithPriority(apolloTask, LOWPRIO); // done via shell in main
 }
 
 task vexOperator(void *arg) {
   (void)arg;
   vexTaskRegister("operator");
 
-  //StartTask(safetyTask);
-  StartTask(driveTask);
-  //StartTask(armTask);
-  //StartTask(pneumaticsTask);
-  StartTaskWithPriority(apolloTask, LOWPRIO);
+  StartTask(driveTask); // drive
+  StartTask(armTask); // arm
+  StartTask(intakeTask); // intake
+  StartTask(pneumaticsTask); // pneumatics
 
-  while (!chThdShouldTerminate()) {
+  while (!chThdShouldTerminate()) { // sleep forever
     vexSleep(25);
   }
 
@@ -64,7 +64,6 @@ task vexAutonomous(void *arg) {
   vexTaskRegister("auton");
 
   StartTask(armTask);
-  StartTaskWithPriority(apolloTask, LOWPRIO);
   autonomous();
 
   while (!chThdShouldTerminate()) {

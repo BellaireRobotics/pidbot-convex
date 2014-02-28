@@ -12,10 +12,10 @@ task pneumaticsTask(void *arg) {
   vexTaskRegister("pneumatics");
 
   while (!chThdShouldTerminate()) {
-    if (vexControllerGet(Btn7U) || vexControllerGet(Btn7UXmtr2)) {
-      pneumaticsSystemSet(1);
-    } else if (vexControllerGet(Btn7D) || vexControllerGet(Btn7DXmtr2)) {
-      pneumaticsSystemSet(0);
+    if (vexControllerGet(Btn7U) || vexControllerGet(Btn7UXmtr2)) { // lock
+      pneumaticsSystemSet(HIGH);
+    } else if (vexControllerGet(Btn7D) || vexControllerGet(Btn7DXmtr2)) { // unlock
+      pneumaticsSystemSet(LOW);
     }
 
     vexSleep(25);

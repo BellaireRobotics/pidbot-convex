@@ -15,6 +15,8 @@
 #include "pidlib.h"
 
 // ---------------------------------
+// Port Constants
+
 #define solenoid_1 kVexDigital_1
 #define solenoid_2 kVexDigital_2
 
@@ -32,19 +34,34 @@
 #define rightBottomLift kVexMotor_5
 #define leftTopLift kVexMotor_6
 #define leftBottomLift kVexMotor_7
+
 // ---------------------------------
+// Constants
 
 #define JOYSTICK_DEADZONE 15
 #define SMAX 127
 #define SMIN (-127)
 
+#define LIFT_SGN_UP 1
+#define LIFT_SGN_DOWN (-1)
+#define LIFT_UP 127
+#define LIFT_DOWN (-127)
 #define LIFT_MINIMUM_HEIGHT 0
-#define LIFT_FLOOR_HEIGHT   0
-#define LIFT_BUMP_HEIGHT    150
-#define LIFT_STASH_HEIGHT   1100
-#define LIFT_HANG_HEIGHT    1280
-#define LIFT_MAX_HEIGHT     1280
+#define LIFT_FLOOR_HEIGHT 0
+#define LIFT_BUMP_HEIGHT 150
+#define LIFT_STASH_HEIGHT 1100
+#define LIFT_HANG_HEIGHT 1280
+#define LIFT_MAX_HEIGHT 1280
 
+#define INTAKE_SGN_IN 1
+#define INTAKE_SGN_OUT (-1)
+#define INTAKE_IN 127
+#define INTAKE_OUT (-127)
+
+#define HIGH 1
+#define LOW  0
+
+// sign function. returns -1 or 1.
 #define sgn(x) ((x > 0) - (x < 0))
 
 // ----------------------------------
@@ -73,7 +90,7 @@ task intakeTask(void *arg);
 void pneumaticsSystemSet(int b);
 task pneumaticsTask(void *arg);
 
-task apolloTask(void *arg); // // real time display of motor and sensor data
+task apolloTask(void *arg);
 task safetyTask(void *arg);
 
 void autonomous(void);

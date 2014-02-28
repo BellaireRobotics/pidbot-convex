@@ -9,9 +9,9 @@ void intakeSystemIntakeSet(short s) {
 
 void intakeSystemIntake(void) {
   if (vexControllerGet(Btn5U)) {
-    intakeSystemIntakeSet(SMAX);
+    intakeSystemIntakeSet(INTAKE_IN);
   } else if (vexControllerGet(Btn5D)) {
-    intakeSystemIntakeSet(SMIN);
+    intakeSystemIntakeSet(INTAKE_OUT);
   } else {
     intakeSystemIntakeSet(0);
   }

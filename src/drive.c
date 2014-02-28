@@ -35,10 +35,10 @@ const unsigned int TrueSpeed[256] = {
 
 void driveSystemArcadeDrive(void) {
   // get joystick values
-  short y = vexControllerGet(Ch3);
-  short x = vexControllerGet(Ch1);
+  short y = vexControllerGet(Ch3); // y vector
+  short x = vexControllerGet(Ch1); // x vector
 
-  // accelerometer as joystick! :)
+  // accelerometer as joystick! FUN! :)
   //short y = vexControllerGet(AcclY);
   // short x = vexControllerGet(AcclX);
 
@@ -68,6 +68,7 @@ void driveSystemSet(short l, short r) {
   driveSystemSetR(r);
 }
 
+// compute motor speeds with a directional vector
 void driveSystemSetVector(short y, short x) {
   driveSystemSetL(sgn(y + x) * TrueSpeed[abs(y + x)]);
   driveSystemSetR(sgn(y - x) * TrueSpeed[abs(y - x)]);

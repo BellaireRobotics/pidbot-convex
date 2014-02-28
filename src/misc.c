@@ -2,15 +2,16 @@
 
 #include "pidbot.h"
 
+// real time display of motor and sensor data (UNUSED; done in main shell task)
 task apolloTask(void *arg) {
   (void)arg;
   vexTaskRegister("apollo");
 
   apolloInit();
 
-  while (1) { // Always update apollo output.
+  while (!chThdShouldTerminate()) {
     apolloUpdate();
-    vexSleep(15); // Slow updates.
+    vexSleep(15);
   }
 
   return (task)0;
