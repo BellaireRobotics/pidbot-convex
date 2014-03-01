@@ -11,7 +11,7 @@ void autonomous(void) {
   driveSystemSetVector(0, 0);
 
   // intake spin
-  intakeSystemIntakeSet(SMIN);
+  intakeSystemIntakeSet(INTAKE_IN * SMAX);
 
   // move forward
   driveSystemSetVector(SMAX, 0);
@@ -37,10 +37,10 @@ void autonomous(void) {
   // set PID floor
   armPID->target_value = LIFT_FLOOR_HEIGHT;
   vexSleep(1000);
-  armSystemLiftSet(SMAX);
+  armSystemLiftSet(LIFT_UP * SMAX);
   vexSleep(3000);
 
   // lock pneumatics
-  pneumaticsSystemSet(1);
+  pneumaticsSystemSet(kVexDigitalHigh);
   armSystemLiftSet(0);
 }

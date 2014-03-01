@@ -22,7 +22,8 @@
 
 // #define autonomousSelect kVexAnalog_2
 
-#define armEnc kImeChannel_1
+#define armImeChannel kImeChannel_1
+#define armEnc kVexSensorIme_1
 
 #define rightIntake kVexMotor_1
 #define leftIntake kVexMotor_10
@@ -42,10 +43,8 @@
 #define SMAX 127
 #define SMIN (-127)
 
-#define LIFT_SGN_UP 1
-#define LIFT_SGN_DOWN (-1)
-#define LIFT_UP 127
-#define LIFT_DOWN (-127)
+#define LIFT_UP 1
+#define LIFT_DOWN (-1)
 #define LIFT_MINIMUM_HEIGHT 0
 #define LIFT_FLOOR_HEIGHT 0
 #define LIFT_BUMP_HEIGHT 150
@@ -53,13 +52,11 @@
 #define LIFT_HANG_HEIGHT 1280
 #define LIFT_MAX_HEIGHT 1280
 
-#define INTAKE_SGN_IN 1
-#define INTAKE_SGN_OUT (-1)
-#define INTAKE_IN 127
-#define INTAKE_OUT (-127)
+#define INTAKE_IN 1
+#define INTAKE_OUT (-1)
 
+#define LOW 0
 #define HIGH 1
-#define LOW  0
 
 // sign function. returns -1 or 1.
 #define sgn(x) ((x > 0) - (x < 0))
