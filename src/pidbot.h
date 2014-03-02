@@ -22,7 +22,6 @@
 
 // #define autonomousSelect kVexAnalog_2
 
-#define armImeChannel kImeChannel_1
 #define armEnc kVexSensorIme_1
 
 #define rightIntake kVexMotor_1
@@ -84,7 +83,7 @@ void intakeSystemIntakeSet(short s);
 void intakeSystemIntake(void);
 task intakeTask(void *arg);
 
-void pneumaticsSystemSet(int b);
+void pneumaticsSystemSet(tVexDigitalState s);
 task pneumaticsTask(void *arg);
 
 task apolloTask(void *arg);

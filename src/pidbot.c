@@ -26,7 +26,7 @@ static vexMotorCfg motorConfig[kVexMotorNum] = {
   { rightBack,       kVexMotor393S, kVexMotorNormal,   kVexSensorNone, 0 },
   { rightTopLift,    kVexMotor393T, kVexMotorNormal,   kVexSensorNone, 0 },
   { rightBottomLift, kVexMotor393T, kVexMotorNormal,   kVexSensorNone, 0 },
-  { leftTopLift,     kVexMotor393T, kVexMotorReversed, kVexSensorIME,  armImeChannel },
+  { leftTopLift,     kVexMotor393T, kVexMotorReversed, kVexSensorIME,  kImeChannel_1 },
   { leftBottomLift,  kVexMotor393T, kVexMotorReversed, kVexSensorNone, 0 },
   { leftFront,       kVexMotor393S, kVexMotorReversed, kVexSensorNone, 0 },
   { leftBack,        kVexMotor393S, kVexMotorNormal,   kVexSensorNone, 0 },

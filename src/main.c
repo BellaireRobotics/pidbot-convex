@@ -122,8 +122,6 @@ int main(void) {
   // Init the serial port associated with the console
   vexConsoleInit();
 
-  // use digital 10 as safety
-  //if( palReadPad( VEX_DIGIO_10_PORT, VEX_DIGIO_10_PIN) == 1)
   // init VEX
   vexCortexInit();
 
