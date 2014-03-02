@@ -25,7 +25,7 @@ void armSystemLift(void) {
     armPID->target_value = LIFT_HANG_HEIGHT;
   } else if (vexControllerGet(Btn6U) || vexControllerGet(Btn6UXmtr2)) { // move arm up
 #ifdef LIFT_OVERRIDE
-	armPID->enabled = 0;
+    armPID->enabled = 0;
     armSystemLiftSet(LIFT_UP * SMAX);
     armPID->target_value = vexMotorPositionGet(leftTopLift);
 #else
@@ -33,23 +33,26 @@ void armSystemLift(void) {
 #endif
   } else if (vexControllerGet(Btn6D) || vexControllerGet(Btn6DXmtr2)) { // move arm down
 #ifdef LIFT_OVERRIDE
-	armPID->enabled = 0;
+    armPID->enabled = 0;
     armSystemLiftSet(LIFT_DOWN * SMAX);
     armPID->target_value = vexMotorPositionGet(leftTopLift);
 #else
     armPID->target_value -= 25;
 #endif
   }
+
 #ifdef LIFT_OVERRIDE
   else {
     armPID->enabled = 1;
   }
+
 #endif
 
   // clip
   if (armPID->target_value < LIFT_MINIMUM_HEIGHT) {
     armPID->target_value = LIFT_MINIMUM_HEIGHT;
   }
+
   if (armPID->target_value > LIFT_MAX_HEIGHT) {
     armPID->target_value = LIFT_MAX_HEIGHT;
   }

@@ -21,7 +21,7 @@ task intakeTask(void *arg) {
   (void)arg;
   vexTaskRegister("intake");
 
-  while(!chThdShouldTerminate()) {
+  while (!chThdShouldTerminate()) {
     intakeSystemIntake();
     vexSleep(25);
   }
