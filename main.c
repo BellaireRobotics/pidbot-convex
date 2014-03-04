@@ -120,10 +120,19 @@ int main(void) {
   chSysInit();
 
   // Init the serial port associated with the console
-  vexConsoleInit();
+  //vexConsoleInit();
 
   // init VEX
-  vexCortexInit();
+  //vexCortexInit();
+
+  int hsargc = 1;
+  char *hsargv = "q";
+  char **hsargvp = &hsargv;
+
+  malloc_init();
+  forkOS_createThread_init();
+  hs_init(&hsargc, &hsargvp);
+  _amain();
 
   // wait for good spi comms
   while (vexSpiGetOnlineStatus() == 0) {

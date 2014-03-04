@@ -8,7 +8,7 @@ CONVEX     = ../convex/cortex
 CONVEX_OPT  = yes
 
 # User C code files
-VEXUSERSRC = $(wildcard src/*.c)
+#VEXUSERSRC = $(wildcard src/*.c)
 
 # Uncomment and add/modify user include files
 VEXUSERINC = include
