@@ -49,10 +49,9 @@ void armSystemLift(void) {
 #endif
 
   // clip
-  if (armPID->target_value < LIFT_MINIMUM_HEIGHT) {
-    armPID->target_value = LIFT_MINIMUM_HEIGHT;
-  }
-
+  // if (armPID->target_value < LIFT_MINIMUM_HEIGHT) {
+  //   armPID->target_value = LIFT_MINIMUM_HEIGHT;
+  // }
   if (armPID->target_value > LIFT_MAX_HEIGHT) {
     armPID->target_value = LIFT_MAX_HEIGHT;
   }
