@@ -11,8 +11,9 @@ task apolloTask(void *arg) {
 
   while (!chThdShouldTerminate()) {
     apolloUpdate();
-    vexSleep(15);
   }
+
+  apolloDeinit();
 
   return (task)0;
 }

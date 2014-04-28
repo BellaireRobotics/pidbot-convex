@@ -76,7 +76,7 @@ CONVEX  = ../..
 endif
 
 # Imported source files and paths
-include $(CONVEX)/boards/VEX_STM32_CORTEX/board.mk
+include boards/VEX_STM32_CORTEX/board.mk
 include $(CHIBIOS)/os/hal/platforms/STM32F1xx/platform.mk
 include $(CHIBIOS)/os/hal/hal.mk
 include $(CHIBIOS)/os/ports/GCC/ARMCMx/STM32F1xx/port.mk
@@ -237,8 +237,7 @@ endif
 include $(CHIBIOS)/os/ports/GCC/ARMCMx/rules.mk
 
 upload:
-	cortexflash -X -w bin/output.hex -v -n 3 /dev/cu.usbmodem1411
-
+	cortexflash -X -w bin/output.bin -v /dev/tty.usbmodem1420
 
 monitor:
-	minicom -D /dev/cu.usbmodem1411
+	screen /dev/tty.usbmodem1411

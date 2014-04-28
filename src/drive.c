@@ -2,6 +2,8 @@
 
 #include "pidbot.h"
 
+//#define ACCL_DRIVE
+
 // linearizing array, goes to 256 to save CPU cycles; xmax + ymax = 256
 const unsigned int TrueSpeed[256] = {
   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -33,14 +35,16 @@ const unsigned int TrueSpeed[256] = {
   127, 127, 127, 127, 127, 127, 127, 127
 };
 
-void driveSystemArcadeDrive(void) {
+void driveRun(void) {
   // get joystick values
-  short y = vexControllerGet(Ch3); // y vector
-  short x = vexControllerGet(Ch1); // x vector
-
+#ifndef ACCL_DRIVE
+  short y = vexControllerGet(CH_Y); // y vector
+  short x = vexControllerGet(CH_X); // x vector
+#else
   // accelerometer as joystick! FUN! :)
-  //short y = vexControllerGet(AcclY);
-  // short x = vexControllerGet(AcclX);
+  short y = -vexControllerGet(AcclY);
+  short x = vexControllerGet(AcclX);
+#endif
 
   if (abs(y) < JOYSTICK_DEADZONE) {
     y = 0;
@@ -50,28 +54,33 @@ void driveSystemArcadeDrive(void) {
     x = 0;
   }
 
-  driveSystemSetVector(y, x);
+  driveSetVector(y, x);
 }
 
-void driveSystemSetL(short l) {
+void driveSetLeft(short l) {
   vexMotorSet(leftFront, l);
   vexMotorSet(leftBack, l);
 }
 
-void driveSystemSetR(short r) {
+void driveSetRight(short r) {
   vexMotorSet(rightFront, r);
   vexMotorSet(rightBack, r);
 }
 
-void driveSystemSet(short l, short r) {
-  driveSystemSetL(l);
-  driveSystemSetR(r);
+void driveSet(short l, short r) {
+  driveSetLeft(l);
+  driveSetRight(r);
 }
 
 // compute motor speeds with a directional vector
-void driveSystemSetVector(short y, short x) {
-  driveSystemSetL(sgn(y + x) * TrueSpeed[abs(y + x)]);
-  driveSystemSetR(sgn(y - x) * TrueSpeed[abs(y - x)]);
+void driveSetVector(short y, short x) {
+  // Linearized speeds
+  //driveSetLeft(sgn(y + x) * TrueSpeed[abs(y + x)]);
+  //driveSetRight(sgn(y - x) * TrueSpeed[abs(y - x)]);
+
+  // Just squared inputs
+  driveSetLeft(y + x);
+  driveSetRight(y - x);
 }
 
 task driveTask(void *arg) {
@@ -79,7 +88,7 @@ task driveTask(void *arg) {
   vexTaskRegister("drive");
 
   while (!chThdShouldTerminate()) {
-    driveSystemArcadeDrive();
+    driveRun();
     vexSleep(25);
   }
 

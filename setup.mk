@@ -1,8 +1,9 @@
 # uncomment these if running from default project location
 # Path to ChibiOS
-CHIBIOS    = ../ChibiOS_2.6.2
+CHIBIOS    = ../../ChibiOS-RT
 # Path to convex
-CONVEX     = ../convex/cortex
+#CONVEX     = ../../convex/convex/cortex
+CONVEX     = /Users/leroux/src/robotics/vex/convex-gh/convex/cortex
 
 # uncomment to use the optional code like the smart motor library
 CONVEX_OPT  = yes
